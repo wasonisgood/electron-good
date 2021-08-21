@@ -43,15 +43,26 @@ jobs:
         if: matrix.os == 'windows-2019'
         run: |
           npm run electron:build-win
+        env:
+          GH_TOKEN: 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
+          
       
       - name: build mac app
         if: matrix.os == 'macos-10.15'
         run: |
           npm run electron:build
+        env:
+          GH_TOKEN: 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
       # step5: cleanup artifacts in dist_electron
-      - name: cleanup artifacts
+      - name: cleanup artifacts for windows
+        if: matrix.os == 'windows-2019'
         run: |
-          npx rimraf "dist_electron/!(*.exe|*.dmg)"
+          npx rimraf "dist_electron/!(*.exe)"
+
+      - name: cleanup artifacts for macos
+        if: matrix.os == 'macos-10.15'
+        run: |
+          npx rimraf "dist_electron/!(*.dmg)"
       # step6: upload artifacts
       - name: upload artifacts
         uses: actions/upload-artifact@v2
